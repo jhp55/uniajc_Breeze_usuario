@@ -1,126 +1,226 @@
-<!DOCTYPE html>
-<html lang="es">
- 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Cliente</title>
- 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
- 
-</head>
- 
-<body>
- 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow-lg border-0 rounded-lg">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="text-center font-weight-light my-4">Registro de Nuevo Cliente</h3>
-                    </div>
-                    <div class="card-body">
- 
-                        <form method="POST" action="{{ route('clientes.store') }}">
-                            @csrf
- 
-                            @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
+<x-app-layout>
+
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Registro de nuevo cliente
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+
+                    <h3 class="text-lg font-semibold mb-6">
+                        Datos del cliente
+                    </h3>
+
+                    {{-- Errores de validación --}}
+                    @if ($errors->any())
+                        <div class="mb-6 p-4 bg-red-100 text-red-800 rounded-md">
+                            <ul class="list-disc list-inside">
+                                @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form method="POST"
+                          action="{{ route('clientes.store') }}">
+
+                        @csrf
+
+                        {{-- Nombre y apellido --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                            <div>
+                                <label for="nombre" class="block text-sm font-medium mb-1">
+                                    Nombre
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="nombre"
+                                    name="nombre"
+                                    value="{{ old('nombre') }}"
+                                    required
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('nombre') border-red-500 @enderror"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="apellido" class="block text-sm font-medium mb-1">
+                                    Apellido
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="apellido"
+                                    name="apellido"
+                                    value="{{ old('apellido') }}"
+                                    required
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('apellido') border-red-500 @enderror"
+                                >
+                            </div>
+
+                        </div>
+
+                        {{-- Documento y fecha de nacimiento --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                            <div>
+                                <label for="documento" class="block text-sm font-medium mb-1">
+                                    Documento
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="documento"
+                                    name="documento"
+                                    value="{{ old('documento') }}"
+                                    required
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('documento') border-red-500 @enderror"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="fecha_nacimiento" class="block text-sm font-medium mb-1">
+                                    Fecha de nacimiento
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="fecha_nacimiento"
+                                    name="fecha_nacimiento"
+                                    value="{{ old('fecha_nacimiento') }}"
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('fecha_nacimiento') border-red-500 @enderror"
+                                >
+                            </div>
+
+                        </div>
+
+                        {{-- Correo electrónico --}}
+                        <div class="mb-4">
+                            <label for="email" class="block text-sm font-medium mb-1">
+                                Correo electrónico
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                required
+                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('email') border-red-500 @enderror"
+                            >
+                        </div>
+
+                        {{-- Dirección y ciudad --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                            <div>
+                                <label for="direccion" class="block text-sm font-medium mb-1">
+                                    Dirección
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="direccion"
+                                    name="direccion"
+                                    value="{{ old('direccion') }}"
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('direccion') border-red-500 @enderror"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="ciudad" class="block text-sm font-medium mb-1">
+                                    Ciudad
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="ciudad"
+                                    name="ciudad"
+                                    value="{{ old('ciudad') }}"
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('ciudad') border-red-500 @enderror"
+                                >
+                            </div>
+
+                        </div>
+
+                        {{-- Teléfono y empresa --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+                            <div>
+                                <label for="telefono" class="block text-sm font-medium mb-1">
+                                    Teléfono
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="telefono"
+                                    name="telefono"
+                                    value="{{ old('telefono') }}"
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('telefono') border-red-500 @enderror"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="id_empresa" class="block text-sm font-medium mb-1">
+                                    Empresa
+                                </label>
+
+                                <select
+                                    id="id_empresa"
+                                    name="id_empresa"
+                                    required
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('id_empresa') border-red-500 @enderror"
+                                >
+                                    <option value="">
+                                        Seleccione una empresa
+                                    </option>
+
+                                    @foreach ($empresas as $empresa)
+                                        <option
+                                            value="{{ $empresa->id_empresa }}"
+                                            {{ old('id_empresa') == $empresa->id_empresa ? 'selected' : '' }}
+                                        >
+                                            {{ $empresa->nombre }}
+                                        </option>
                                     @endforeach
-                                </ul>
+
+                                </select>
                             </div>
-                            @endif
- 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3 mb-md-0">
-                                        <input class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" type="text" placeholder="Ingrese nombre" value="{{ old('nombre') }}" required />
-                                        <label for="nombre">Nombre</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input class="form-control @error('apellido') is-invalid @enderror" id="apellido" name="apellido" type="text" placeholder="Ingrese apellido" value="{{ old('apellido') }}" required />
-                                        <label for="apellido">Apellido</label>
-                                    </div>
-                                </div>
-                            </div>
- 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3 mb-md-0">
-                                        <input class="form-control @error('documento') is-invalid @enderror" id="documento" name="documento" type="text" placeholder="Cédula/NIT" value="{{ old('documento') }}" required />
-                                        <label for="documento">Documento</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input class="form-control @error('fecha_nacimiento') is-invalid @enderror" id="fecha_nacimiento" name="fecha_nacimiento" type="date" value="{{ old('fecha_nacimiento') }}" />
-                                        <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-                                    </div>
-                                </div>
-                            </div>
- 
-                            <div class="form-floating mb-3">
-                                <input class="form-control @error('email') is-invalid @enderror" id="email" name="email" type="email" placeholder="nombre@ejemplo.com" value="{{ old('email') }}" required />
-                                <label for="email">Email</label>
-                            </div>
- 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3 mb-md-0">
-                                        <input class="form-control" id="direccion" name="direccion" type="text" placeholder="Dirección" value="{{ old('direccion') }}" />
-                                        <label for="direccion">Dirección</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input class="form-control" id="ciudad" name="ciudad" type="text" placeholder="Ciudad" value="{{ old('ciudad') }}" />
-                                        <label for="ciudad">Ciudad</label>
-                                    </div>
-                                </div>
-                            </div>
- 
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3 mb-md-0">
-                                        <input class="form-control" id="telefono" name="telefono" type="text" placeholder="Teléfono" value="{{ old('telefono') }}" />
-                                        <label for="telefono">Teléfono</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <select class="form-select @error('id_empresa') is-invalid @enderror" id="id_empresa" name="id_empresa" required>
-                                            <option value="">Seleccione una Empresa</option>
-                                            @foreach ($empresas as $empresa)
-                                            <option value="{{ $empresa->id_empresa }}" {{ old('id_empresa') == $empresa->id_empresa ? 'selected' : '' }}>
-                                                {{ $empresa->nombre }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                        <label for="id_empresa">Empresa</label>
-                                    </div>
-                                </div>
-                            </div>
- 
-                            <div class="mt-4 mb-0">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary btn-lg" type="submit">Guardar Cliente</button>
-                                    <a class="btn btn-secondary" href="{{ route('clientes.index') }}">Cancelar y Volver</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+
+                        </div>
+
+                        {{-- Botones --}}
+                        <div class="flex justify-end gap-3">
+
+                            <a href="{{ route('clientes.index') }}"
+                               class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm font-medium rounded-md">
+                                Cancelar
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">
+                                Guardar cliente
+                            </button>
+
+                        </div>
+
+                    </form>
+
                 </div>
+
             </div>
+
         </div>
     </div>
+
+</x-app-layout>
  
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
- 
-</body>
- 
-</html>

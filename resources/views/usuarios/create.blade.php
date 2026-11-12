@@ -1,152 +1,173 @@
-<!DOCTYPE html>
-<html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Usuario</title>
+<x-app-layout>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
-</head>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Registro de nuevo usuario
+        </h2>
+    </x-slot>
 
-<body>
+    <div class="py-12">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow-lg border-0 rounded-lg">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="text-center font-weight-light my-4">
-                            Registro de Nuevo Usuario
-                        </h3>
-                    </div>
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <div class="card-body">
+                    <h3 class="text-lg font-semibold mb-6">
+                        Datos del usuario
+                    </h3>
 
-                        <form method="POST" action="{{ route('usuarios.store') }}">
-                            @csrf
+                    {{-- Errores de validación --}}
+                    @if ($errors->any())
+                        <div class="mb-6 p-4 bg-red-100 text-red-800 rounded-md">
+                            <ul class="list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
+                    <form method="POST" action="{{ route('usuarios.store') }}">
+                        @csrf
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3 mb-md-0">
-                                        <input class="form-control @error('username') is-invalid @enderror"
-                                               id="username"
-                                               name="username"
-                                               type="text"
-                                               placeholder="Ingrese nombre de usuario"
-                                               value="{{ old('username') }}"
-                                               required>
-                                        <label for="username">Nombre de usuario</label>
-                                    </div>
-                                </div>
+                        {{-- Nombre de usuario y contraseña --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input class="form-control @error('password') is-invalid @enderror"
-                                               id="password"
-                                               name="password"
-                                               type="password"
-                                               placeholder="Ingrese contraseña"
-                                               required>
-                                        <label for="password">Contraseña</label>
-                                    </div>
-                                </div>
+                            <div>
+                                <label for="username" class="block text-sm font-medium mb-1">
+                                    Nombre de usuario
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    value="{{ old('username') }}"
+                                    required
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('username') border-red-500 @enderror"
+                                >
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3 mb-md-0">
-                                        <select class="form-select @error('rol') is-invalid @enderror"
-                                                id="rol"
-                                                name="rol"
-                                                required>
-                                            <option value="">Seleccione un rol</option>
-                                            <option value="admin" {{ old('rol') == 'admin' ? 'selected' : '' }}>
-                                                Administrador
-                                            </option>
-                                            <option value="usuario" {{ old('rol') == 'usuario' ? 'selected' : '' }}>
-                                                Usuario
-                                            </option>
-                                        </select>
-                                        <label for="rol">Rol</label>
-                                    </div>
-                                </div>
+                            <div>
+                                <label for="password" class="block text-sm font-medium mb-1">
+                                    Contraseña
+                                </label>
 
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <select class="form-select @error('activo') is-invalid @enderror"
-                                                id="activo"
-                                                name="activo"
-                                                required>
-                                            <option value="1" {{ old('activo', '1') == '1' ? 'selected' : '' }}>
-                                                Activo
-                                            </option>
-                                            <option value="0" {{ old('activo') == '0' ? 'selected' : '' }}>
-                                                Inactivo
-                                            </option>
-                                        </select>
-                                        <label for="activo">Estado</label>
-                                    </div>
-                                </div>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    required
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('password') border-red-500 @enderror"
+                                >
                             </div>
 
-                            <div class="row mb-4">
-                                <div class="col-md-12">
-                                    <div class="form-floating">
-                                        <select class="form-select @error('id_empresa') is-invalid @enderror"
-                                                id="id_empresa"
-                                                name="id_empresa"
-                                                required>
-                                            <option value="">Seleccione una empresa</option>
+                        </div>
 
-                                            @foreach ($empresas as $empresa)
-                                                <option value="{{ $empresa->id_empresa }}"
-                                                    {{ old('id_empresa') == $empresa->id_empresa ? 'selected' : '' }}>
-                                                    {{ $empresa->nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <label for="id_empresa">Empresa</label>
-                                    </div>
-                                </div>
+                        {{-- Rol y estado --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                            <div>
+                                <label for="rol" class="block text-sm font-medium mb-1">
+                                    Rol
+                                </label>
+
+                                <select
+                                    id="rol"
+                                    name="rol"
+                                    required
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('rol') border-red-500 @enderror"
+                                >
+                                    <option value="">Seleccione un rol</option>
+
+                                    <option value="admin" {{ old('rol') == 'admin' ? 'selected' : '' }}>
+                                        Administrador
+                                    </option>
+
+                                    <option value="usuario" {{ old('rol') == 'usuario' ? 'selected' : '' }}>
+                                        Usuario
+                                    </option>
+                                </select>
                             </div>
 
-                            <div class="mt-4 mb-0">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary btn-lg" type="submit">
-                                        Guardar Usuario
-                                    </button>
+                            <div>
+                                <label for="activo" class="block text-sm font-medium mb-1">
+                                    Estado
+                                </label>
 
-                                    <a class="btn btn-secondary" href="{{ route('usuarios.index') }}">
-                                        Cancelar y Volver
-                                    </a>
-                                </div>
+                                <select
+                                    id="activo"
+                                    name="activo"
+                                    required
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('activo') border-red-500 @enderror"
+                                >
+                                    <option value="1" {{ old('activo', '1') == '1' ? 'selected' : '' }}>
+                                        Activo
+                                    </option>
+
+                                    <option value="0" {{ old('activo') == '0' ? 'selected' : '' }}>
+                                        Inactivo
+                                    </option>
+                                </select>
                             </div>
 
-                        </form>
+                        </div>
 
-                    </div>
+                        {{-- Empresa --}}
+                        <div class="mb-6">
+
+                            <label for="id_empresa" class="block text-sm font-medium mb-1">
+                                Empresa
+                            </label>
+
+                            <select
+                                id="id_empresa"
+                                name="id_empresa"
+                                required
+                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('id_empresa') border-red-500 @enderror"
+                            >
+                                <option value="">
+                                    Seleccione una empresa
+                                </option>
+
+                                @foreach ($empresas as $empresa)
+                                    <option
+                                        value="{{ $empresa->id_empresa }}"
+                                        {{ old('id_empresa') == $empresa->id_empresa ? 'selected' : '' }}
+                                    >
+                                        {{ $empresa->nombre }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+                        {{-- Botones --}}
+                        <div class="flex justify-end gap-3">
+
+                            <a href="{{ route('usuarios.index') }}"
+                               class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm font-medium rounded-md">
+                                Cancelar
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">
+                                Guardar usuario
+                            </button>
+
+                        </div>
+
+                    </form>
+
                 </div>
+
             </div>
+
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            crossorigin="anonymous"></script>
-
-</body>
-</html>
+</x-app-layout>

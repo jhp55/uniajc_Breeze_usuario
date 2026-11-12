@@ -1,72 +1,129 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Clientes</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
-</head>
-<body>
- 
-    <div class="container my-5">
-        
-        <h1 class="mb-4">Clientes Registrados</h1>
-        
-        <a href="{{ route('clientes.create') }}" class="btn btn-primary mb-3">
-            Crear Nuevo Cliente
-        </a>
-        
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<x-app-layout>
+
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Clientes registrados
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold">
+                            Listado de clientes
+                        </h3>
+
+                        <a href="{{ route('clientes.create') }}"
+                           class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">
+                            + Crear nuevo cliente
+                        </a>
+                    </div>
+
+                    {{-- Mensaje de confirmación --}}
+                    @if (session('success'))
+                        <div class="mb-4 rounded-md bg-green-100 p-4 text-green-800">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    {{-- Tabla de clientes --}}
+                    <div class="overflow-x-auto">
+
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+
+                            <thead class="bg-gray-100 dark:bg-gray-700">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">ID</th>
+                                    <th class="px-4 py-3 text-left">Nombre</th>
+                                    <th class="px-4 py-3 text-left">Apellido</th>
+                                    <th class="px-4 py-3 text-left">Ciudad</th>
+                                    <th class="px-4 py-3 text-left">Email</th>
+                                    <th class="px-4 py-3 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+
+                                @forelse ($clientes as $cliente)
+
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+
+                                        <td class="px-4 py-3">
+                                            {{ $cliente->id_cliente }}
+                                        </td>
+
+                                        <td class="px-4 py-3">
+                                            {{ $cliente->nombre }}
+                                        </td>
+
+                                        <td class="px-4 py-3">
+                                            {{ $cliente->apellido }}
+                                        </td>
+
+                                        <td class="px-4 py-3">
+                                            {{ $cliente->ciudad }}
+                                        </td>
+
+                                        <td class="px-4 py-3">
+                                            {{ $cliente->email }}
+                                        </td>
+
+                                        <td class="px-4 py-3">
+
+                                            <div class="flex justify-center gap-2">
+
+                                                <a href="{{ route('clientes.edit', $cliente->id_cliente) }}"
+                                                   class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm rounded-md">
+                                                    Editar
+                                                </a>
+
+                                                <form action="{{ route('clientes.destroy', $cliente->id_cliente) }}"
+                                                      method="POST">
+
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="submit"
+                                                            class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded-md"
+                                                            onclick="return confirm('¿Está seguro de que desea eliminar este cliente?')">
+                                                        Eliminar
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                @empty
+
+                                    <tr>
+                                        <td colspan="6"
+                                            class="px-4 py-6 text-center text-gray-500">
+                                            No hay clientes registrados.
+                                        </td>
+                                    </tr>
+
+                                @endforelse
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
             </div>
-        @endif
- 
-        <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Ciudad</th>
-                        <th>Email</th>
-                        <th class="text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($clientes as $cliente)
-                    <tr>
-                        <td>{{ $cliente->id_cliente }}</td>
-                        <td>{{ $cliente->nombre }}</td>
-                        <td>{{ $cliente->apellido }}</td>
-                        <td>{{ $cliente->ciudad }}</td>
-                        <td>{{ $cliente->email }}</td>
-                        <td class="text-center">
-                            <a href="{{ route('clientes.edit', $cliente->id_cliente) }}" class="btn btn-sm btn-warning me-2">
-                                Editar
-                            </a>
-                            
-                            <form action="{{ route('clientes.destroy', $cliente->id_cliente) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de que desea ELIMINAR al cliente {{ $cliente->nombre }} {{ $cliente->apellido }}?')">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+
         </div>
-        
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    
-</body>
-</html>
+
+</x-app-layout>
